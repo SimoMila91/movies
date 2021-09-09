@@ -18,9 +18,9 @@ export const Context = createContext<ContextState>(IContext);
 
 
 export const ContextProvider: React.FC = ({ children }) => {
-  const [sizeContent, setSizeContent] = useState<boolean>(false);
-  const [mrg, setmrg] = useState<number>(0);
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [sizeContent, setSizeContent] = useState<boolean>(window.innerWidth < 720 ? false : true);
+  const [mrg, setmrg] = useState<number>(200);
+  const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 720 ? true : false);
 
   const handleResizeContent = (n: string) => {
     setSizeContent(n === '0' ? true : false);
@@ -36,7 +36,7 @@ export const ContextProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     setmrg(sizeContent && !isMobile ? 200 : 0);
-  }, [sizeContent, isMobile])
+  })
 
   return (
     <Context.Provider

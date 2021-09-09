@@ -4,6 +4,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Context } from '../context/Context';
+import Search from './Search';
 
 const styles = makeStyles(() => ({
   appBar: {
@@ -77,22 +78,21 @@ const styles = makeStyles(() => ({
     width: '100%',
     padding: '50px 20px',
     opacity: 0.7,
-  }
+  },
 }));
 
 
 const NavBar = () => {
   const classes = styles();
-  const [sidebar, setSidebar] = useState<string>('0');
   const [showArrow, setShowArrow] = useState<boolean>(false);
   const [activeArrow, setActiveArrow] = useState<number>(0);
-  const { handleResizeContent } = useContext(Context);
+  const { handleResizeContent, isMobile } = useContext(Context);
+  const [sidebar, setSidebar] = useState<string>(window.innerWidth < 720 ? '0' : '13rem');
  
 
   const handleSidebar = () => { 
     setSidebar(sidebar === '0' ? '13rem' : '0');
     handleResizeContent(sidebar);
-    console.log(sidebar);
   };
 
   const handleFocus = ( n: number ) => {
@@ -110,6 +110,9 @@ const NavBar = () => {
           <BarChartIcon />
           <h5 className={classes.logoTitle}>Friendly Search</h5>
         </div>
+        {
+          !isMobile && <Search /> 
+        }
         <IconButton className={classes.butMarg} onClick={handleSidebar}>
           <MenuIcon className={classes.navBut} fontSize="medium" />
         </IconButton>
