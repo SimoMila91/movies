@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { IconButton, makeStyles, Divider } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import { Context } from '../context/Context';
 
 const styles = makeStyles(() => ({
   appBar: {
     height: '4rem',
     width: '100%',
-    backgroundColor: 'rgb(255, 67, 80)',
+    backgroundColor: '#FC4C54',
     position: 'fixed',
     top: 0,
     zIndex: 2,
@@ -21,7 +22,8 @@ const styles = makeStyles(() => ({
     display: 'flex',
   },
   logoTitle: {
-    marginTop: 6,
+    marginTop: 'auto',
+    marginBottom: 'auto',
     marginLeft: 4,
   },
   root: {
@@ -68,6 +70,9 @@ const styles = makeStyles(() => ({
   iconLink: {
     color: '#696969',
   },
+  linkSize: {
+    fontSize: 13,
+  },
   divider: {
     width: '100%',
     padding: '50px 20px',
@@ -81,15 +86,21 @@ const NavBar = () => {
   const [sidebar, setSidebar] = useState<string>('0');
   const [showArrow, setShowArrow] = useState<boolean>(false);
   const [activeArrow, setActiveArrow] = useState<number>(0);
+  const { handleResizeContent } = useContext(Context);
  
 
   const handleSidebar = () => { 
-    setSidebar(sidebar === '0' ? '15rem' : '0');
+    setSidebar(sidebar === '0' ? '13rem' : '0');
+    handleResizeContent(sidebar);
+    console.log(sidebar);
   };
 
   const handleFocus = ( n: number ) => {
     setShowArrow(true);
     setActiveArrow(n);
+    setTimeout(() => {
+      setSidebar(window.innerWidth < 720 ? '0' : '13rem');
+    }, 500);
   };
 
   return (
@@ -107,14 +118,14 @@ const NavBar = () => {
         <a 
           onFocus={(e: any) => handleFocus(0)} 
           style={ showArrow && activeArrow === 0 ? 
-            {  color: 'rgb(255, 67, 80)', backgroundColor: 'rgb(34, 42, 49)', marginTop: 20} : 
+            {  color: '#FC4C54', backgroundColor: 'rgb(34, 42, 49)', marginTop: 20} : 
             { marginTop: 20}
           } 
           className={classes.linkStyle} 
           href="#"
         >
           <div className={classes.linkContent}>
-            <p>New Releases</p>
+            <p className={classes.linkSize}>New Releases</p>
             { showArrow && activeArrow === 0 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
@@ -128,11 +139,11 @@ const NavBar = () => {
           }
         >
         <div className={classes.linkContent}>
-            <p>Trending</p>
+            <p className={classes.linkSize}>Trending</p>
             { showArrow && activeArrow === 1 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
-        <a 
+        <a
           onFocus={(e: any) => handleFocus(2)} 
           className={classes.linkStyle} 
           href="#"
@@ -142,7 +153,7 @@ const NavBar = () => {
           }
         >
         <div className={classes.linkContent}>
-            <p>Popular</p>
+            <p className={classes.linkSize}>Popular</p>
             { showArrow && activeArrow === 2 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
@@ -156,7 +167,7 @@ const NavBar = () => {
           }
         >
         <div className={classes.linkContent}>
-            <p>Favorites</p>
+            <p className={classes.linkSize}>Favorites</p>
             { showArrow && activeArrow === 3 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
