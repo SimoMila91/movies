@@ -8,7 +8,7 @@ const styles = makeStyles((theme) => ({
   content: {
     marginLeft: 200,
     height: '100%',
-    paddingTop: '9rem',
+    paddingTop: '7.3rem',
   }
 }));
 

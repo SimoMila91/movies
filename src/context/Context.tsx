@@ -4,7 +4,9 @@ type ContextState = {
   sizeContent: boolean,
   mrg: number,
   isMobile: boolean,
-  handleResizeContent: (n: string) => void;
+  handleResizeContent: (n: string) => void,
+  activeArrow: number,
+  handleArrow: (n: number) => void,
 };
 
 const IContext: ContextState = {
@@ -12,6 +14,8 @@ const IContext: ContextState = {
   mrg: 0,
   isMobile: false,
   handleResizeContent: () => {},
+  activeArrow: 0,
+  handleArrow: () => {},
 }
 
 export const Context = createContext<ContextState>(IContext);
@@ -21,6 +25,7 @@ export const ContextProvider: React.FC = ({ children }) => {
   const [sizeContent, setSizeContent] = useState<boolean>(window.innerWidth < 720 ? false : true);
   const [mrg, setmrg] = useState<number>(200);
   const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 720 ? true : false);
+  const [activeArrow, setActiveArrow] = useState<number>(0);
 
   const handleResizeContent = (n: string) => {
     setSizeContent(n === '0' ? true : false);
@@ -30,13 +35,17 @@ export const ContextProvider: React.FC = ({ children }) => {
     setIsMobile(window.innerWidth < 720 ? true : false);
   }
 
+  const handleArrow = (n: number) => {
+    setActiveArrow(n);
+  }
+
   useEffect(() => {
     window.addEventListener("resize", handleMobile);
   })
 
   useEffect(() => {
     setmrg(sizeContent && !isMobile ? 200 : 0);
-  })
+  }, [sizeContent, isMobile])
 
   return (
     <Context.Provider
@@ -44,7 +53,9 @@ export const ContextProvider: React.FC = ({ children }) => {
         sizeContent, 
         handleResizeContent,
         mrg,
-        isMobile
+        isMobile,
+        activeArrow,
+        handleArrow,
       }}
     >
       { children }

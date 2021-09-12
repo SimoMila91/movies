@@ -13,7 +13,7 @@ const styles = makeStyles(() => ({
     backgroundColor: '#FC4C54',
     position: 'fixed',
     top: 0,
-    zIndex: 2,
+    zIndex: 1001,
     opacity: 0.8,
     display: 'flex',
   },
@@ -38,6 +38,7 @@ const styles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
+    zIndex: 1000,
   },
   navBut: {
     color: 'white'
@@ -84,9 +85,8 @@ const styles = makeStyles(() => ({
 
 const NavBar = () => {
   const classes = styles();
-  const [showArrow, setShowArrow] = useState<boolean>(false);
-  const [activeArrow, setActiveArrow] = useState<number>(0);
-  const { handleResizeContent, isMobile } = useContext(Context);
+  const [showArrow, setShowArrow] = useState<boolean>(true);
+  const { handleResizeContent, isMobile, activeArrow, handleArrow } = useContext(Context);
   const [sidebar, setSidebar] = useState<string>(window.innerWidth < 720 ? '0' : '13rem');
  
 
@@ -97,7 +97,7 @@ const NavBar = () => {
 
   const handleFocus = ( n: number ) => {
     setShowArrow(true);
-    setActiveArrow(n);
+    handleArrow(n);
     setTimeout(() => {
       setSidebar(window.innerWidth < 720 ? '0' : '13rem');
     }, 500);
@@ -142,7 +142,7 @@ const NavBar = () => {
           }
         >
         <div className={classes.linkContent}>
-            <p className={classes.linkSize}>Trending</p>
+            <p className={classes.linkSize}>Coming Soon</p>
             { showArrow && activeArrow === 1 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
@@ -156,7 +156,7 @@ const NavBar = () => {
           }
         >
         <div className={classes.linkContent}>
-            <p className={classes.linkSize}>Popular</p>
+            <p className={classes.linkSize}>Trending</p>
             { showArrow && activeArrow === 2 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
@@ -170,7 +170,7 @@ const NavBar = () => {
           }
         >
         <div className={classes.linkContent}>
-            <p className={classes.linkSize}>Favorites</p>
+            <p className={classes.linkSize}>Popular</p>
             { showArrow && activeArrow === 3 ? <ChevronRightIcon className={classes.iconLink} /> : null }
           </div>
         </a>
