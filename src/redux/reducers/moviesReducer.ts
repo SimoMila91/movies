@@ -5,7 +5,7 @@ import * as actionType from '../constants/requestMovie';
     payload: any,
   }
 
- export const moviesReducer = (state = { data: [], loading: false, page: 0, error: null }, action: IAction) => {
+ export const moviesReducer = (state = { data: [], loading: false, page: 0, error: null, results: 0 }, action: IAction) => {
   switch (action.type) {
     case actionType.GET_MOVIES_REQUEST:
       return {
@@ -17,22 +17,18 @@ import * as actionType from '../constants/requestMovie';
       return {
         data: action.payload.results,
         loading: false,
-        page: action.payload.total_pages
+        page: action.payload.total_pages,
+        results: action.payload.total_results
       }
     case actionType.GET_MOVIES_FAIL:
       return {
         error: action.payload,
         loading: false,
       }
-    case actionType.ADD_MOVIES_PAGE: 
-      return {
-        ...state,
-        data: [...state.data, action.payload],
-      }
     default: 
       return state;
   }
-} 
+}
 
 export const genresReducer = (state = { data: [], error: null}, action: IAction) => {
   switch (action.type) {
@@ -45,6 +41,24 @@ export const genresReducer = (state = { data: [], error: null}, action: IAction)
   }
 }
 
+export const detailsReducer = (state = { data: [], loading: true, error: null}, action: IAction) => {
+  switch (action.type) {
+    case actionType.GET_ITEM_DETAILS_REQUEST: 
+      return {
+        loading: true,
+        data: [],
+      }
+    case actionType.GET_ITEM_DETAILS:
+      return {
+        data: action.payload,
+        loading: false,
+      }
+    default: 
+      return state; 
+  } 
+}
+
 
 export type MoviesState = ReturnType<typeof moviesReducer>;
 export type GenresState = ReturnType<typeof genresReducer>;
+export type DetailsState = ReturnType<typeof detailsReducer>;

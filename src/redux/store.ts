@@ -1,11 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { moviesReducer, genresReducer } from './reducers/moviesReducer';
+import { moviesReducer, genresReducer, detailsReducer } from './reducers/moviesReducer';
 
 const reducer = combineReducers({
   movies: moviesReducer,
   genres: genresReducer,
+  details: detailsReducer
 });
 
 const middleware = [thunk];

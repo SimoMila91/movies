@@ -1,16 +1,16 @@
 import * as actionTypes from '../constants/requestMovie';
 import server from '../../api/movieApi';
 
-export const getMovies = (n: number) => async (dispatch: any) => {
+export const getMovies = (n: number, querySearch: string, media: string, query: string) => async (dispatch: any) => {
   try {
     dispatch({ type: actionTypes.GET_MOVIES_REQUEST });
-    const { data } = await server.get('/home', {
+    const { data } = await server.get(`/${querySearch}`, {
       params: {
         page: n,
+        media_type: media,
+        query: query
       }
     });
-    // da cancellare
-    console.log(data);
     dispatch({
       type: actionTypes.GET_MOVIES_SUCCESS,
       payload: data
@@ -36,4 +36,23 @@ export const getGenres = () => async (dispatch: any) => {
   } catch (error: any) {
     console.log(error);
   }
+}
+
+export const getDetails = (id: number, media_query: string ) => (dispatch: any) => {
+    dispatch({
+      type: actionTypes.GET_ITEM_DETAILS_REQUEST
+    });
+    server.get('/details', {
+      params: {
+        id: id,
+        media_type: media_query, 
+      }
+    }).then(res => {
+      dispatch({
+        type: actionTypes.GET_ITEM_DETAILS,
+        payload: res.data,
+      })
+    }).catch(err => {
+      console.log(err);
+    })
 }

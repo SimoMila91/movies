@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { makeStyles, Typography } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { GenresState } from '../redux/reducers/moviesReducer';
 import { RootState } from '../redux/store';
-import axios from 'axios';
+import not from '../images/not.jpg';
 
 interface IMovie {
+  id: number,
+  clicked: number,
   movie: any,
 };
 
@@ -14,7 +16,7 @@ const useStyles = makeStyles(() => ({
     width: 170,
     textAlign: 'left',
     "&:hover": {
-      transform: 'scale(1.02)',
+      transform: 'scale(1.03)',
     }
   },
   img: {
@@ -33,7 +35,7 @@ const useStyles = makeStyles(() => ({
     backgroundColor: 'rgb(253, 204, 69)',
     borderRadius: 15,
     width: 40,
-    color: '#FFFAFA',
+    color: 'rgb(26, 28, 32)',
     fontSize: 14,
     fontWeight: 700,
     textAlign: 'center',
@@ -45,41 +47,62 @@ const useStyles = makeStyles(() => ({
   genreStyle: {
     lineHeight: 1.3,
     marginTop: 8,
+    color: 'rgb(0 157 247)',
   }
 }));
 
 
-const Movie: React.FC<IMovie> = ({ movie }) => {
+const Movie: React.FC<IMovie> = ({ id, clicked, movie }) => {
   const classes = useStyles();
   const [genres, setGenres] = useState<Array<string>>([]); 
   const { data } = useSelector<RootState, GenresState>(state => state.genres);
 
-  const handleGenres = () => { 
-    if (genres.length === 0) {
-      for (let i = 0; i < movie.genre_ids.length; i++) {
-        for (let k = 0; k < data.length; k++) {
-          if (movie.genre_ids[i] === data[k].id) {
-            setGenres((oldGenres: any) => [...oldGenres, data[k].name]);
+  const handleGenres = useCallback(() => { 
+    if (movie.genre_ids !== undefined) {
+      if (genres.length === 0) {
+        for (let i = 0; i < movie.genre_ids.length; i++) {
+          for (let k = 0; k < data.length; k++) {
+            if (movie.genre_ids[i] === data[k].id) {
+              setGenres((oldGenres: any) => [...oldGenres, data[k].name]);
+            }
           }
         }
       }
     }
-  };
+  }, [data, genres, movie.genre_ids] );
 
  useEffect(() => {
    handleGenres();
- }, [data])
+ }, [handleGenres])
 
   return (
       movie !== undefined ? 
       <div className={classes.root}>
-        <div className={classes.headerCard}>
-          <span className={classes.rateCard}>{ movie.vote_average}</span>
-          <img className={classes.img} src={ movie !== undefined ?  `https://image.tmdb.org/t/p/w200/${movie.poster_path}` : ''} alt={movie.original_title} />
+        <div 
+          className={classes.headerCard}
+          style={clicked === id ? { backgroundColor: '#FC4C54', height: 250 } : { background: 'none', height: 'initial'}}
+        >
+          <span 
+            className={classes.rateCard}
+            style={ 
+              clicked === id ? 
+              { backgroundColor: '#e5474f', color: 'white'} 
+              : { backgroundColor: 'rgb(253, 204, 69)', color: 'rgb(26, 28, 32)' }}
+          >
+            { movie.vote_average}
+          </span>
+          <img 
+            className={classes.img} 
+            style={ clicked === id ? { opacity: 0.3 } : { opacity: 1 } }
+            src={ (movie.poster_path !== undefined && movie.poster_path !== null) ?  
+              `https://image.tmdb.org/t/p/w154/${movie.poster_path}` 
+              : `${not}`} 
+            alt={movie.original_title} 
+          />
         </div>
         <div className={classes.footerCard}>
-          <Typography variant="subtitle2">{movie.title}</Typography>
-          <Typography className={classes.genreStyle} variant="caption" component="p" style={{ color: 'rgb(95, 190, 244)'}}>
+          <Typography variant="subtitle2">{movie.title ?  movie.title : movie.name}</Typography>
+          <Typography className={classes.genreStyle} variant="caption" component="p">
           { genres.join(" ") }
           </Typography>         
         </div>
